@@ -11,7 +11,6 @@ public class SwipeController : MonoBehaviour
     public float dragDistance;
     public float time;
     public Touch touch = new Touch();
-    public Input input = new Input();
 
     // Start is called before the first frame update
     void Start()
@@ -32,7 +31,7 @@ public class SwipeController : MonoBehaviour
         {
             touch = Input.GetTouch(0);
             touchPos = touch.position;
-            if(touch.phase == TouchPhase.Moved)
+            if(touch.phase == TouchPhase.Moved && System.Math.Abs(touchPos.x - touch.position.x) >= dragDistance)
             {
                 currentPos = touch.position;
             }
@@ -42,6 +41,6 @@ public class SwipeController : MonoBehaviour
 
     public void move()
     {
-        transform.position = Vector3.Lerp(originalPos, nextPos, 0.2f);
+        transform.position = Vector3.Lerp(originalPos, nextPos, time);
     }
 }
