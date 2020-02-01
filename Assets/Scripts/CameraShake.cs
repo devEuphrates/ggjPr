@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class CameraShake : MonoBehaviour
 {
+    //kullanırken CameraShake cameraShake 
+    //Coroutine(cameraShake.Shake(duration, magnitude))
     public float change;
     public float distance;
-    public Vector3 newPosition;
+    public Vector3 newPosition; 
 
     public IEnumerable Shake(float duration, float magnitude)
     {

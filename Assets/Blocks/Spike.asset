@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae63a9fd4a40f7d4580e56e31c481463, type: 3}
   m_Name: Spike
   m_EditorClassIdentifier: 
-  indx: 0
+  indx: 115
   spawnPrefab: 0
   prefab: {fileID: 0}

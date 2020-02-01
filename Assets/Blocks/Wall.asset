@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae63a9fd4a40f7d4580e56e31c481463, type: 3}
   m_Name: Wall
   m_EditorClassIdentifier: 
-  indx: 0
-  spawnPrefab: 0
-  prefab: {fileID: 0}
+  indx: 35
+  spawnPrefab: 1
+  prefab: {fileID: 4910573053894183776, guid: 2c82b051682dfba47ab94de620470633, type: 3}

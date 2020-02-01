@@ -1,69 +1,118 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    public FallManager fm;
-    float t = 0.10f, p = 0f;
-    private BObstacle emp;
-    private int level;
-    public int points;
+    public static GameManager Instance;
+    public float speed = 2f;
+    public int minGap = 2;
+    private int zc = 0;
+    private Vector3 s1, s2;
+    public GameObject wall, hole;
+    public int points = 0;
+    private float turn = 0;
+    public GameObject spWall;
+    public GameObject player;
+    public GameObject score;
 
-    private void Start()
+    private void Awake()
     {
-        level = 1;
-        points = 0;
-        char[,] ll = new char[5,1];
-        for (int i = 1; i < 4; i++)
+        if (Instance != null)
         {
-            ll[i, 0] =  ' ';
+            Destroy(this.gameObject);
         }
-        ll[0, 0] = '#';
-        ll[4, 0] = '#';
-
-        emp = new BObstacle(1, ll, 1);
-    }
-
-    void Update()
-    {
-        t = 0.02f / fm.fall_speed;
-        p += Time.deltaTime;
-        if (p >= t)
+        else
         {
-            p = 0f;
-            Debug.Log("#1");
-            InsertObstacle(emp);
+            Instance = this;
         }
     }
 
-    void InsertObstacle(BObstacle obstacle)
+    public void FillHole(Transform caller)
     {
-        Debug.Log(obstacle.height);
-        for (int i = 0; i < obstacle.height; i++)
-        {
-            char[] row = new char[5];
+        points++;
+        Vector3 pos = caller.position;
 
-            for (int j = 0; j < 5; j++)
+        Destroy(caller.gameObject);
+        Instantiate(spWall, pos, Quaternion.identity, transform);
+        score.GetComponent<Text>().text = points.ToString();
+    }
+
+    float t = 0f;
+    void Start()
+    {
+        score.GetComponent<Text>().text = points.ToString();
+        player = GameObject.Find("Character");
+        s1 = new Vector3(-2f, -10f, 0f);
+        s2 = new Vector3( 2f, -10f, 0f);
+        speed = GameManager.Instance.speed;
+        for (int i = 0; i < 20; i++)
+        {
+            float ypos0 = s1.y - 1 + i * 1f;
+            Instantiate(wall, new Vector3(s1.x, ypos0, s1.z), Quaternion.identity, transform);
+            float ypos1 = s2.y - 1 + i * 1f;
+            Instantiate(wall, new Vector3(s2.x, ypos1, s2.z), Quaternion.identity, transform);
+        }
+    }
+
+    private void Update()
+    {
+        turn += Time.deltaTime * speed / 10f;
+        if (turn >= 2) turn = 0;
+        speed = GameManager.Instance.speed;
+
+        t += speed * Time.deltaTime * 2f;
+
+        if (t >= 1f)
+        {
+            System.Random rnd = new System.Random();
+
+            int r = rnd.Next(1, 10 * (int)(speed / 2f));
+
+            if (r > 2)
             {
-                row[j] = obstacle.layout[j, i];
+                SpawnWall(s1);
+                SpawnWall(s2);
             }
-            Debug.Log("#2");
-            fm.MoveBoardUp(row);
+            else
+            {
+                if (zc >= minGap)
+                {
+                    zc = 0;
+                    System.Random random = new System.Random((int)Time.timeSinceLevelLoad);
+                    int z = random.Next(5);
+                    if (z < 3)
+                    {
+                        SpawnHole(s1);
+                        SpawnWall(s2);
+                    }
+                    else if (z >= 3)
+                    {
+                        SpawnHole(s2);
+                        SpawnWall(s1);
+                    }
+                    zc = 0;
+                }
+                else
+                {
+                    SpawnWall(s1);
+                    SpawnWall(s2);
+                    zc++;
+                }
+            }
+            t = 0f;
         }
     }
-}
 
-class BObstacle
-{
-    public int level;
-    public char[,] layout;
-    public int height;
-
-    public BObstacle(int lvl, char[,] lo, int _height)
+    public void SpawnWall(Vector3 pos)
     {
-        level = lvl;
-        layout = lo;
-        height = _height;
+        Instantiate(wall, new Vector3(pos.x, pos.y, pos.z), Quaternion.identity, transform);
     }
+
+    public void SpawnHole(Vector3 pos)
+    {
+        Instantiate(hole, new Vector3(pos.x, pos.y, pos.z), Quaternion.identity, transform);
+    }
+
 }
