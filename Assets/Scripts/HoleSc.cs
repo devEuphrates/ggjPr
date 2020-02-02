@@ -6,6 +6,6 @@ public class HoleSc : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
-        GameManager.Instance.FillHole(this.transform);
+        GameManager.Instance.GivePoint(this.transform);
     }
 }
