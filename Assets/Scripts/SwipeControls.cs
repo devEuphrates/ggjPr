@@ -10,6 +10,7 @@ public class SwipeControls : MonoBehaviour
     public int x = 1;
     public bool ismoving = false, stopSR = false, stopSL = false;
     public Vector3 target;
+    public GameObject cube;
     void Start()
     {
         dragDistance = Screen.width / 5;
@@ -18,7 +19,6 @@ public class SwipeControls : MonoBehaviour
 
     void Update()
     {
-        if (GameManager.Instance.gameEnded) return;
         if (ismoving)
         {
             MoveToPos();
@@ -30,7 +30,7 @@ public class SwipeControls : MonoBehaviour
 
     void MoveToPos()
     {
-        transform.position = Vector3.Lerp(transform.position, target, 0.4f * Time.deltaTime * 50f);
+        transform.position = Vector3.Lerp(transform.position, target, 0.2f);
         if (Vector3.Distance(transform.position, target) <= 0.2f)
         {
             transform.position = target;

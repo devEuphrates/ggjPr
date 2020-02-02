@@ -16,22 +16,6 @@ public class GameManager : MonoBehaviour
     public GameObject spWall;
     public GameObject player;
     public GameObject score;
-    public GameObject playButton;
-    public Animator anima;
-    public bool gameEnded;
-    private int lvl = 1;
-
-
-    public void PauseGame()
-    {
-        Time.timeScale = 0;
-    }
-
-
-    public void ResumeGame()
-    {
-        Time.timeScale = 1;
-    }
 
     private void Awake()
     {
@@ -45,34 +29,19 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void GivePoint(Transform caller)
+    public void FillHole(Transform caller)
     {
-        points += lvl;
+        points++;
         Vector3 pos = caller.position;
 
         Destroy(caller.gameObject);
         Instantiate(spWall, pos, Quaternion.identity, transform);
         score.GetComponent<Text>().text = points.ToString();
-        score.GetComponent<Animator>().Play("text");
-    }
-
-    public void Kill()
-    {
-        Debug.Log("Death");
-        gameEnded = true;
-        speed = 0;
-        foreach (var item in GameObject.FindGameObjectsWithTag("TBD"))
-        {
-            Destroy(item);
-        }
-        playButton.SetActive(true);
     }
 
     float t = 0f;
     void Start()
     {
-        gameEnded = true;
-        speed = 0;
         score.GetComponent<Text>().text = points.ToString();
         player = GameObject.Find("Character");
         s1 = new Vector3(-2f, -10f, 0f);
@@ -99,9 +68,9 @@ public class GameManager : MonoBehaviour
         {
             System.Random rnd = new System.Random();
 
-            int r = rnd.Next(1, 10);
+            int r = rnd.Next(1, 10 * (int)(speed / 2f));
 
-            if (r > 1)
+            if (r > 2)
             {
                 SpawnWall(s1);
                 SpawnWall(s2);
@@ -134,15 +103,6 @@ public class GameManager : MonoBehaviour
             }
             t = 0f;
         }
-    }
-
-    public void PlayGame() 
-    {
-        gameEnded = false;
-        speed = 2f;
-        playButton.SetActive(false);
-        anima.Play("char_spawn");
-        score.GetComponent<Animator>().Play("f_in");
     }
 
     public void SpawnWall(Vector3 pos)
